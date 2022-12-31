@@ -29,7 +29,7 @@ def safe_log2(log_val) -> float:
 @profile
 def _fast_intersection(these: Iterable[int],
                        those: Iterable[int]) -> List[int]:
-    """theseとthoseはsortされていること．"""
+    """these and those must be sorted"""
     intersections = []
 
     try:
