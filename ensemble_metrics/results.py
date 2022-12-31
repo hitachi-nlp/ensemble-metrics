@@ -3,9 +3,10 @@ from typing import Dict, List, Union, Optional, Any, Tuple
 
 import numpy as np
 from pydantic import BaseModel
-from machine_learning.typing import FloatOptional
 
 logger = logging.getLogger(__name__)
+
+FloatOptional = Union[Optional[T], float]
 
 
 class MTIBounds(BaseModel):

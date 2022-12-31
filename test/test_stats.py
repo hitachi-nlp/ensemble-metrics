@@ -1,8 +1,8 @@
 from pprint import pprint
-from logger_setup import setup as setup_logger
+# from logger_setup import setup as setup_logger
 import logging
 
-from stats import (
+from ensemble_metrics.stats import (
     FrequencyDistribution,
     calc_multi_information,
     calc_conditional_multi_information,
@@ -113,9 +113,9 @@ def test():
     ])
     mti_reference = safe_log2(4)
     assert_almost_equal(mti, mti_reference)
-    print('MI(x1, x2 | y) = 0.0 は合っている．(x1, x2)の同時分布のエントロピーが最初からゼロであるため．')
+    print('MI(x1, x2 | y) = 0.0 is OK since the joint distribution of (x1, x2) is zero from the beginning.')
 
 
 if __name__ == '__main__':
-    setup_logger(do_stderr=True, level=logging.INFO)
+    # setup_logger(do_stderr=True, level=logging.INFO)
     test()

@@ -10,11 +10,8 @@ setup(
     author_email='terufumi.morishita.wp@hitachi.com',
     license='MIT',
     install_requires=[
-        'asyncio',
-        'requests',
-        'aiohttp',
-        'tenacity',
-        'sanic',
+        'numpy',
+        'pydantic',
     ],
     packages=find_packages(),
     zip_safe=False,

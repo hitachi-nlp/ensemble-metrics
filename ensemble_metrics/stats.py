@@ -5,9 +5,6 @@ from collections import defaultdict
 from pprint import pformat
 import logging
 
-from kern_profiler import preprocess
-import numpy as np
-
 logger = logging.getLogger()
 
 Sample = Dict[str, Any]
