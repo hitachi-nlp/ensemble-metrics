@@ -1,5 +1,5 @@
 # Ensemble Metrics
-This is the official codebase for the paper ICML(2022) paper [Rethinking Fano’s Inequality in Ensemble Learning](https://proceedings.mlr.press/v162/morishita22a/morishita22a.pdf).  
+This is the official codebase for the paper ICML(2022) paper [Rethinking Fano’s Inequality in Ensemble Learning](https://arxiv.org/abs/2205.12683).  
 
 This repo contains the souce codes for calculating the ensemble metrics proposed in the paper.
 
