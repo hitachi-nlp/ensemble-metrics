@@ -26,7 +26,6 @@ def safe_log2(log_val) -> float:
     return math.log2(log_val)
 
 
-@profile
 def _fast_intersection(these: Iterable[int],
                        those: Iterable[int]) -> List[int]:
     """these and those must be sorted"""
@@ -63,7 +62,6 @@ def _fast_intersection(these: Iterable[int],
 
 class FrequencyDistribution:
 
-    @profile
     def __init__(self, master_samples: List[Sample], count_threshold: int = 0):
         self._master_samples: List[Sample] = master_samples
         self._num_master_samples = len(master_samples)
@@ -117,7 +115,6 @@ class FrequencyDistribution:
         #     if variable_name not in self._master_variable_names:
         #         raise Exception(f'Unknown variable name: "{variable_name}"')
 
-    @profile
     def get_samples(self) -> Iterable[Any]:
         if self._finished_sample_caching:
             for idx, sample in self._samples_cache:
@@ -171,7 +168,6 @@ class FrequencyDistribution:
         else:
             return sample
 
-    @profile
     def joint(self, return_counts=False) -> Dict[HashableSample, Union[int, float]]:
         if self._cached_joint_counts is not None:
             counts = self._cached_joint_counts
@@ -202,7 +198,6 @@ class FrequencyDistribution:
                 thresholded_counts[condition] /= _count_sum
             return thresholded_counts
 
-    @profile
     def marginal(self,
                  include_variables: Optional[List[str]] = None,
                  exclude_variables: Optional[List[str]] = None) -> 'FrequencyDistribution':
@@ -225,7 +220,6 @@ class FrequencyDistribution:
         )
         return marginal_dist
 
-    @profile
     def conditional(self, condition: Union[Condition, Dict[str, Any]]) -> 'FrequencyDistribution':
         if isinstance(condition, dict):
             condition = tuple(sorted(condition.items()))
@@ -301,7 +295,6 @@ class FrequencyDistribution:
         return pformat(self.joint())
 
 
-@profile
 def calc_multi_information(dist: FrequencyDistribution,
                            interaction_order: int = None,
                            condition_variables_Z: List[str] = None) -> float:
@@ -401,7 +394,6 @@ def calc_conditional_multi_information(dist: FrequencyDistribution,
     return ret / freq_sum
 
 
-@profile
 def calc_entropy(dist: FrequencyDistribution) -> float:
     ret = 0.0
     freq_sum = 0.0
@@ -414,7 +406,6 @@ def calc_entropy(dist: FrequencyDistribution) -> float:
     return ret / freq_sum
 
 
-@profile
 def calc_conditional_entropy(dist: FrequencyDistribution,
                              condition_variables: Sequence[str],
                              interaction_order: int = None,
@@ -453,7 +444,6 @@ def calc_conditional_entropy(dist: FrequencyDistribution,
             return min(H_Xi_omegas)
 
 
-@profile
 def _calc_multi_information_by_joint_dst(dist: FrequencyDistribution) -> float:
     unigram_dists = {}
     for variable_name in dist.variable_names:

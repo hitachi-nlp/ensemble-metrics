@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List, Union, Optional, Any, Tuple
+from typing import Dict, List, Union, Optional, Any, Tuple, T
 
 import numpy as np
 from pydantic import BaseModel
