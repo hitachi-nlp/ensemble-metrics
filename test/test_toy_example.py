@@ -71,6 +71,7 @@ metrics = compute_metrics(
 print('relevance:', metrics.relevance)
 print('redundancy:', metrics.redundancy)
 print('combloss:', metrics.combloss)
+print('ensemble strength:', metrics.strength_E)
 
 # -- the error rate lower bounds
 print('loose_LB_wo_combloss:', metrics.loose_LB_wo_combloss)

@@ -21,10 +21,21 @@ pip install -e .
 ```
 
 ## How to use
+Basically,
 ```python
-...
+from ensemble_metrics import compute_metrics
+
+metrics = compute_metrics(
+    labels,
+    base_model_preds,
+    ensemble_preds,
+    p0=0.2,  # approximate error rate
+)
+
+print(metrics)
+> (...)
 ```
-See [test_toy.py](./test/test_toy_example.py) for a toy example.
+See [toy example](./test/test_toy_example.py) for a working toy example.
 
 ## Other materials (Japanese only)
 * [アンサンブル学習はどうすれば性能アップできるのか、日立製作所が実務に役立つ新理論を提唱 | 日経Robotics（日経ロボティクス）](https://xtech.nikkei.com/atcl/nxt/mag/rob/18/012600001/00114/)
