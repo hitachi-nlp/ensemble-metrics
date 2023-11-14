@@ -4,12 +4,11 @@
 This is the official codebase for the paper [Rethinking Fano's Inequality in Ensemble Learning](https://arxiv.org/abs/2205.12683) (ICML2022).
 
 ## What's good?
-* 👊The paper proposes a fundamental theory that evaluates an ensemble method by a well-grounded set of metrics:
+* 👊T he paper proposes a fundamental theory that evaluates an ensemble method by a well-grounded set of metrics:
     * relevance  (≒accuracy)
     * redundancy (≒diversity)
     * combination loss (≒information lost when model predictions are combined to make a final prediction)
-* 😀 **Therefore, one can use the three metrics to analyze an ensemble method, e.g., one's own newly proposed method.**
-    - **One can claim that the proposed method is better than the previous one on the basis of a metric.**
+* 😀 **Therefore, one can use the three metrics to analyze an ensemble method, e.g., claim that the one's own proposed method is better than the previous one on the basis of a metric.**
     - We demonstrated such analysis in Section 6 of our paper.
 
 For details of the theory, please refer to the paper or [our blog post](https://www.hitachi.com/rd/sc/aiblog/202209_theoretical-framework-of-el/index.html)
