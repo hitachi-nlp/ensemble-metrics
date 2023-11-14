@@ -35,11 +35,13 @@ class EnsembleMetrics(BaseModel):
     H_omega_3_variables_bottom3: List[Union[np.ndarray, Tuple[str, ...]]] = None
 
 
-def compute_metrics(labels,
-                    base_model_preds: List[np.ndarray],
-                    ensemble_preds: np.ndarray,
-                    MTI_k: Optional[int] = None,
-                    p0: Optional[float] = None) -> EnsembleMetrics:
+def compute_metrics(
+    labels,
+    base_model_preds: List[np.ndarray],
+    ensemble_preds: np.ndarray,
+    p0: Optional[float] = None,  # Approximate error rate. The error rate of a base model can be used.
+    MTI_k: int = 3,
+) -> EnsembleMetrics:
 
     # -- make distribution
     samples = []
@@ -231,7 +233,7 @@ def calc_multi_information(dist: FrequencyDistribution,
                     include_variables=[target_variable_name] + list(_omega_variable_names)
                 )
                 H_Xi_omega = calc_conditional_entropy(  # SLOW!, たくさん呼ばれる．
-                    omega_marginal_dist ,
+                    omega_marginal_dist,
                     _omega_variable_names,
                 )
                 I_Xi_omega_list.append(H_Xi - H_Xi_omega)

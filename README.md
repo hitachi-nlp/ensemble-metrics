@@ -1,7 +1,17 @@
-# Ensemble Learning Theory
-This is the official codebase for the paper ICML(2022) paper [Rethinking Fano’s Inequality in Ensemble Learning](https://arxiv.org/abs/2205.12683).
-The paper proposes a theory about Ensemble Learning that evaluates a given ensemble system by a well-grounded set of metrics: relevance(~accuracy), redundancy(~diversity) and combination loss.
-This repo contains the souce codes for calculating the ensemble metrics proposed in the paper.
+# Ensemble Metrics
+This is the official codebase for the paper [Rethinking Fano's Inequality in Ensemble Learning](https://arxiv.org/abs/2205.12683) (ICML2022).
+
+## What's good?
+1. The paper proposes a fundamental theory on Ensemble Learning that evaluates a given ensemble method by a well-grounded set of metrics.
+1. Specifically, the theory (lemma 3.1) states that the performance of an ensemble method (i.e., the lower bound of classification erorr rate) can be decomposed into the following three terms, which can be used as the metrics:
+    * relevance  (= accuracy)
+    * redundancy (= diversity)
+    * combination loss (= information lost when model predictions are combined to make a final prediction)
+1. **Therefore, one can use the three metrics to analyze an ensemble method, e.g., one's own newly proposed method.**
+    - One can claim that the proposed method is better than the previous one on the basis of a metric.
+    - We demonstrated such analysis in Section 6 of our paper.
+
+For details of the theory, please refer to the original paper or [our blog post](https://www.hitachi.com/rd/sc/aiblog/202209_theoretical-framework-of-el/index.html)
 
 ## Installation
 ```console
@@ -11,7 +21,14 @@ pip install -e .
 ```
 
 ## How to use
-See [test_toy.py](./test/test_toy.py).
+```python
+...
+```
+See [test_toy.py](./test/test_toy_example.py) for a toy example.
+
+## Other materials (Japanese only)
+* [アンサンブル学習はどうすれば性能アップできるのか、日立製作所が実務に役立つ新理論を提唱 | 日経Robotics（日経ロボティクス）](https://xtech.nikkei.com/atcl/nxt/mag/rob/18/012600001/00114/)
+* [人工知能学会２０２３ランチョンセミナー「アンサンブル学習における基礎理論の構築」| Speaker Deck](https://speakerdeck.com/morishtr/ren-gong-zhi-neng-xue-hui-2023rantiyonsemina-ansanburuxue-xi-niokeruji-chu-li-lun-nogou-zhu)
 
 ## Citation
 Please cite our paper as:
@@ -28,8 +45,7 @@ Please cite our paper as:
   month = 	 {17--23 Jul},
   publisher =    {PMLR},
   pdf = 	 {https://proceedings.mlr.press/v162/morishita22a/morishita22a.pdf},
-  url = 	 {https://proceedings.mlr.press/v162/morishita22a.html},
-  abstract = 	 {We propose a fundamental theory on ensemble learning that evaluates a given ensemble system by a well-grounded set of metrics. Previous studies used a variant of Fano’s inequality of information theory and derived a lower bound of the classification error rate on the basis of the accuracy and diversity of models. We revisit the original Fano’s inequality and argue that the studies did not take into account the information lost when multiple model predictions are combined into a final prediction. To address this issue, we generalize the previous theory to incorporate the information loss. Further, we empirically validate and demonstrate the proposed theory through extensive experiments on actual systems. The theory reveals the strengths and weaknesses of systems on each metric, which will push the theoretical understanding of ensemble learning and give us insights into designing systems.}
+  url = 	 {https://proceedings.mlr.press/v162/morishita22a.html}
 }
 ```
 

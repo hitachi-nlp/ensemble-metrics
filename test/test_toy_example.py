@@ -51,15 +51,19 @@ ensemble_preds = np.array([vote(i_sample) for i_sample in range(num_samples)])
 
 
 # -- calculate metrics
-MTI_k = 3   # "k" of MTK_k in the paper
-p0 = base_model_error_rate   # "p_0" in the paper
+
+# "p_0" in the paper, the error rate of a base model can be used.
+p0 = base_model_error_rate
+
+# MTK_k in the paper
+MTI_k = 3
 
 metrics = compute_metrics(
     labels,
     base_model_preds,
     ensemble_preds,
-    MTI_k=MTI_k,
     p0=p0,
+    MTI_k=MTI_k,
 )
 
 
