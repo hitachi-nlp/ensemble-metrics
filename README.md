@@ -1,4 +1,6 @@
 # Ensemble Metrics
+![deduction example](./our_framework_detailed-crop.pdf)
+
 This is the official codebase for the paper [Rethinking Fano's Inequality in Ensemble Learning](https://arxiv.org/abs/2205.12683) (ICML2022).
 
 ## What's good?
