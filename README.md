@@ -37,7 +37,7 @@ print(metrics.redundancy)
 print(metrics.combloss)
 ```
 
-See [here](./test/test_toy_example.py) for a working toy example.
+See [a working example](./test/test_toy_example.py) for details.
 
 ## Other materials (Japanese only)
 * [アンサンブル学習はどうすれば性能アップできるのか、日立製作所が実務に役立つ新理論を提唱 | 日経Robotics（日経ロボティクス）](https://xtech.nikkei.com/atcl/nxt/mag/rob/18/012600001/00114/)
