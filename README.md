@@ -1,41 +1,17 @@
 # Ensemble Learning Theory
 This is the official codebase for the paper ICML(2022) paper [Rethinking Fano’s Inequality in Ensemble Learning](https://arxiv.org/abs/2205.12683).
-The paper proposes a theory about Ensemble Learning, specifically, a theory that evaluates a given ensemble system by a well-grounded set of metrics.
+The paper proposes a theory about Ensemble Learning that evaluates a given ensemble system by a well-grounded set of metrics: relevance(~accuracy), redundancy(~diversity) and combination loss.
 This repo contains the souce codes for calculating the ensemble metrics proposed in the paper.
 
 ## Installation
-* from github:
-    ```sh
-    pip install git+https://github.com/hitachi-nlp/ensemble-metrics.git@master
-    ```
-* or from local: ( **recommended** for traceability)
-    ```sh
-    git clone https://github.com/hitachi-nlp/ensemble-metrics.git
-    cd ensemble-metrics
-    pip install -e .
-    ```
+```console
+git clone https://github.com/hitachi-nlp/ensemble-metrics.git
+cd ensemble-metrics
+pip install -e .
+```
 
 ## How to use
-A snippet for calculating ensemble statistics:
-```python
-from ensemble_metrics import calc_stats
-import numpy as np
-
-ensemble_preds: np.ndarray = (...)
-preds_of_base_models: List[np.ndarray] = (...)
-y = (...)
-interaction_order: int = 3   # "k" of MTK_k in the paper
-cncavity_p0: float = (...)   # "P_0" in the paper
-
-metrics, metrics_previous = calc_stats(
-   ensemble_preds,
-   preds_of_base_models,
-   y,
-   interaction_order=interaction_order,
-   concavity_p0=concavity_p0
-)
-```
-Here, "metrics" is the ensemble metrics calculated by our method, and "metrics_previous" is the one by the previous studies.
+See [test_toy.py](./test/test_toy.py).
 
 ## Citation
 Please cite our paper as:

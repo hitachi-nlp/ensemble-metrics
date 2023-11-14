@@ -1,1 +1,1 @@
-from .ensemble import calc_stats
+from .metrics import compute_metrics

@@ -1,63 +1,11 @@
-from typing import List, Tuple, Union, Dict, Optional, Any, Sequence, Iterable, Set
+from typing import List, Tuple, Union, Dict, Optional, Any, Iterable, Set, Sequence
 import itertools
-import math
 from collections import defaultdict
 from pprint import pformat
-import logging
-
-logger = logging.getLogger()
 
 Sample = Dict[str, Any]
 HashableSample = Sequence[Tuple[str, Any]]
 Condition = Sequence[Tuple[str, Any]]
-
-
-class _GeneratorIterable:
-    def __init__(self, f):
-        self._f = f
-
-    def __iter__(self):
-        return self._f()
-
-
-def safe_log2(log_val) -> float:
-    if log_val < 1e-10:
-        log_val = 1e-10
-    return math.log2(log_val)
-
-
-def _fast_intersection(these: Iterable[int],
-                       those: Iterable[int]) -> List[int]:
-    """these and those must be sorted"""
-    intersections = []
-
-    try:
-        this = next(these)
-        that = next(those)
-    except StopIteration:
-        return[]
-
-    do_pop_these = True
-    while True:
-        if this == that:
-            intersections.append(this)
-        elif this < that:
-            do_pop_these = True
-        else:
-            do_pop_these = False
-
-        if do_pop_these:
-            try:
-                this = next(these)
-            except StopIteration:
-                break
-        else:
-            try:
-                that = next(those)
-            except StopIteration:
-                break
-
-    return intersections
 
 
 class FrequencyDistribution:
@@ -67,12 +15,11 @@ class FrequencyDistribution:
         self._num_master_samples = len(master_samples)
         self._count_threshold = count_threshold
 
-        self._sample_indexes: Iterable[int] = list(range(0, len(master_samples)))
+        self._sample_indexes: List[int] = list(range(0, len(master_samples)))
         self._num_samples: int = None
 
-        self._master_variable_names: Set[str] = [name for name, val in next(iter(master_samples)).items()]
-        self._variable_names: List[str] = self._master_variable_names
-        self._master_variable_names = set(self._master_variable_names)
+        self._variable_names: List[str] = [name for name, val in next(iter(master_samples)).items()]
+        self._master_variable_names = set(self._variable_names)
 
         # sample cache
         self._samples_cache: List[Tuple[int, Sample]] = []
@@ -109,11 +56,12 @@ class FrequencyDistribution:
                 raise Exception(f'Unknown variable name: "{variable_name}"')
 
     def _sample_indexes(self, indexes: List[int]):
-        # 高速化のため，パスする．
-        pass
         # for variable_name in variable_names:
         #     if variable_name not in self._master_variable_names:
         #         raise Exception(f'Unknown variable name: "{variable_name}"')
+
+        # pass for speedup
+        pass
 
     def get_samples(self) -> Iterable[Any]:
         if self._finished_sample_caching:
@@ -295,176 +243,35 @@ class FrequencyDistribution:
         return pformat(self.joint())
 
 
-def calc_multi_information(dist: FrequencyDistribution,
-                           interaction_order: int = None,
-                           condition_variables_Z: List[str] = None) -> float:
-    """condition_variables_ZがNoneでない場合，I(X) - I(X|condition_variables_Z) を計算する．"""
+def _fast_intersection(these: Iterable[int],
+                       those: Iterable[int]) -> List[int]:
+    """these and those must be sorted"""
+    intersections = []
 
-    condition_variables_Z = condition_variables_Z or []
-    marginal_dist = dist.marginal(exclude_variables=condition_variables_Z)
+    try:
+        this = next(these)
+        that = next(those)
+    except StopIteration:
+        return []
 
-    if interaction_order is None:
-        if condition_variables_Z:
-            MI_marginal = _calc_multi_information_by_joint_dst(marginal_dist)
-            MI_conditional = calc_conditional_multi_information(dist, condition_variables_Z)
-            return MI_marginal - MI_conditional
+    do_pop_these = True
+    while True:
+        if this == that:
+            intersections.append(this)
+        elif this < that:
+            do_pop_these = True
         else:
-            return _calc_multi_information_by_joint_dst(marginal_dist)
-    else:
-        # sum(i) {H(X_i) - H(X_i|X_(1:i-1))}
+            do_pop_these = False
 
-        if interaction_order is not None:
-            marginal_dist.index_condition_sample_indexes(max_condition_variables=interaction_order - 1)
-            marginal_dist.index_joint_to_sample_indexes(max_joint_variables=interaction_order - 1)
-
-        if interaction_order <= 1:
-            raise ValueError()
-        variable_names = list(marginal_dist.variable_names)
-
-        sum_ = 0.0
-        for i_target, target_variable_name in enumerate(variable_names):
-            # I(Xi|X_1:i-1) = max{ I(X_i|Omega) } を計算する．
-
-            if i_target == 0:
-                continue
-
-            H_Xi = calc_entropy(marginal_dist.marginal(include_variables=[target_variable_name]))
-
-            right_condition_variable_names = variable_names[:i_target]
-            I_Xi_omega_list: List[float] = []
-            _condition_order = min(len(right_condition_variable_names), interaction_order - 1)
-            for _omega_variable_names in itertools.combinations(right_condition_variable_names,
-                                                                _condition_order):
-                omega_marginal_dist = marginal_dist.marginal(
-                    include_variables=[target_variable_name] + list(_omega_variable_names)
-                )
-                H_Xi_omega = calc_conditional_entropy(  # SLOW!, たくさん呼ばれる．
-                    omega_marginal_dist ,
-                    _omega_variable_names,
-                )
-                I_Xi_omega_list.append(H_Xi - H_Xi_omega)
-
-                if condition_variables_Z:
-                    H_Xi_Y = calc_conditional_entropy(
-                        dist.marginal(include_variables=[target_variable_name] + condition_variables_Z),
-                        condition_variables_Z,
-                    )
-                    omega_Z_marginal_dist = dist.marginal(
-                        include_variables=[target_variable_name] + list(_omega_variable_names) + condition_variables_Z
-                    )
-                    H_Xi_omega_Z = calc_conditional_entropy(  # SLOW!, たくさん呼ばれる．
-                        omega_Z_marginal_dist,
-                        list(_omega_variable_names) + condition_variables_Z,
-                    )
-                    I_Xi_omega_list[-1] -= (H_Xi_Y - H_Xi_omega_Z)  # H_Xi_omega_Z - H_Xi_omega
-                    # この量は必ず負になる気がする．一方で，Iの差分は正になる気がする．矛盾する．なぜ？
-
-            max_I_Xi_omega = max(I_Xi_omega_list)
-            sum_ += max_I_Xi_omega
-        return sum_
-
-
-def _check_freq_sum(freq_sum: float) -> float:
-    threshold = 0.1
-    if freq_sum < threshold:
-        logger.warning('Overall frequency sum %f was smaller than %f. This will produce meaningless quantities. Possible cause is the count threshold of distributions.', freq_sum, threshold)
-
-    non_zero_threshold = 0.000001
-    if freq_sum < non_zero_threshold:
-        return non_zero_threshold
-    else:
-        return freq_sum
-
-
-def calc_conditional_multi_information(dist: FrequencyDistribution,
-                                       condition_variables: List[str],
-                                       interaction_order: int = None) -> float:
-    prior = dist.marginal(include_variables=condition_variables)
-    ret = 0.0
-    freq_sum = 0.0
-    for variables, freq in prior.joint().items():
-        conditional = dist.conditional(dict(variables))
-        if len(conditional.joint()) == 0:  # thresholdに殺された場合
-            continue
-
-        ret += freq * calc_multi_information(conditional, interaction_order=interaction_order)
-        freq_sum += freq
-
-    freq_sum = _check_freq_sum(freq_sum)
-    return ret / freq_sum
-
-
-def calc_entropy(dist: FrequencyDistribution) -> float:
-    ret = 0.0
-    freq_sum = 0.0
-
-    for _, freq in dist.joint().items():
-        ret -= freq * safe_log2(freq)
-        freq_sum += freq
-
-    freq_sum = _check_freq_sum(freq_sum)
-    return ret / freq_sum
-
-
-def calc_conditional_entropy(dist: FrequencyDistribution,
-                             condition_variables: Sequence[str],
-                             interaction_order: int = None,
-                             return_all_omega: bool = False) -> Union[float, Tuple[List[float], List[Tuple[str, ...]]]]:
-    if interaction_order is None:
-        prior = dist.marginal(include_variables=condition_variables)
-        ret = 0.0
-        freq_sum = 0.0    # thresholdに殺された場合, 1.0にならない．
-
-        for variables, freq in prior.joint().items():
-            conditional = dist.conditional(dict(variables))   # SLOW
-            if len(conditional.joint()) == 0:  # thresholdに殺された場合
-                continue
-
-            ret += freq * calc_entropy(conditional)
-            freq_sum += freq
-
-        freq_sum = _check_freq_sum(freq_sum)
-        return ret / freq_sum
-    else:
-        if interaction_order < 2:
-            raise ValueError()
-        target_variable_names = [name for name in dist.variable_names
-                                 if name not in condition_variables]
-        H_Xi_omegas: List[float] = []
-        _condition_order = min(len(condition_variables), interaction_order - 1)
-        omega_variables: List[Tuple[str, ...]] = []
-        for _omega_variable_names in itertools.combinations(condition_variables, _condition_order):
-            marginal = dist.marginal(include_variables=target_variable_names + list(_omega_variable_names))
-            H_Xi_omega = calc_conditional_entropy(marginal, _omega_variable_names)
-            H_Xi_omegas.append(H_Xi_omega)
-            omega_variables.append(_omega_variable_names)
-        if return_all_omega:
-            return H_Xi_omegas, omega_variables
+        if do_pop_these:
+            try:
+                this = next(these)
+            except StopIteration:
+                break
         else:
-            return min(H_Xi_omegas)
+            try:
+                that = next(those)
+            except StopIteration:
+                break
 
-
-def _calc_multi_information_by_joint_dst(dist: FrequencyDistribution) -> float:
-    unigram_dists = {}
-    for variable_name in dist.variable_names:
-        unigram_dists[variable_name] = dist.marginal(include_variables=[variable_name])
-
-    ret = 0.0
-    freq_sum = 0
-    for variables, joint_freq in dist.joint().items():
-        X_dict = dict(variables)
-
-        products_of_unigrams_freqs = 1.0
-        for variable_name in dist.variable_names:
-            variable_val = X_dict[variable_name]
-            unigram_dist = unigram_dists[variable_name]
-            unigram_freq = unigram_dist.joint().get(((variable_name, variable_val),), 0.0)
-            products_of_unigrams_freqs *= unigram_freq
-
-        if products_of_unigrams_freqs != 0.0:
-            ret += joint_freq\
-                * safe_log2(joint_freq / products_of_unigrams_freqs)
-            freq_sum += joint_freq
-
-    freq_sum = _check_freq_sum(freq_sum)
-    return ret
+    return intersections

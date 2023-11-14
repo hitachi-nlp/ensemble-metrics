@@ -1,9 +1,8 @@
 from pprint import pprint
-# from logger_setup import setup as setup_logger
 import logging
 
-from ensemble_metrics.stats import (
-    FrequencyDistribution,
+from ensemble_metrics.frequency_distribution import FrequencyDistribution
+from ensemble_metrics.metrics import (
     calc_multi_information,
     calc_conditional_multi_information,
     safe_log2,
@@ -15,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 def test():
     def get_stats(samples):
-        interaction_order = 3
+        MTI_k = 3
         samples = [dict(sample) for sample in samples]
         print('\n----------- samples -------------')
         pprint(samples)
@@ -40,8 +39,8 @@ def test():
         multi_information = calc_multi_information(dist)
         print(multi_information)
 
-        print('\n------------ MI(x1, x2, y) interaction_order={0} --------------'.format(interaction_order))
-        multi_information_k3 = calc_multi_information(dist, interaction_order=interaction_order)
+        print('\n------------ MI(x1, x2, y) MTI_k={0} --------------'.format(MTI_k))
+        multi_information_k3 = calc_multi_information(dist, order=MTI_k)
         print(multi_information_k3)
         assert_almost_equal(multi_information, multi_information_k3)
 
@@ -49,8 +48,8 @@ def test():
         conditional_multi_information = calc_conditional_multi_information(dist, ['y'])
         print(conditional_multi_information)
 
-        print('\n------------ MI(x1, x2 | y) interaction_order={0} --------------'.format(interaction_order))
-        conditional_multi_information_k3 = calc_conditional_multi_information(dist, ['y'], interaction_order=interaction_order)
+        print('\n------------ MI(x1, x2 | y) MTI_k={0} --------------'.format(MTI_k))
+        conditional_multi_information_k3 = calc_conditional_multi_information(dist, ['y'], order=MTI_k)
         print(conditional_multi_information)
 
         assert_almost_equal(conditional_multi_information_k3, conditional_multi_information)
@@ -117,5 +116,4 @@ def test():
 
 
 if __name__ == '__main__':
-    # setup_logger(do_stderr=True, level=logging.INFO)
     test()
