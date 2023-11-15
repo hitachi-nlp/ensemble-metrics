@@ -4,7 +4,8 @@
 This is the official codebase for the paper [Rethinking Fano's Inequality in Ensemble Learning](https://arxiv.org/abs/2205.12683) (ICML2022).
 
 ## What's good?
-* 👊 The paper proposed a fundamental theory that evaluates an ensemble method by a well-grounded set of metrics:
+* 👊 The paper answers the fundamental question in ensemble learning: **What factors make an ensemble method good or bad?**
+* 👊 Specifically, pour theory evaluates an ensemble method by a well-grounded set of metrics:
     * relevance  (≒accuracy)
     * redundancy (≒diversity)
     * combination loss (≒information lost when model predictions are combined to make a final prediction)
