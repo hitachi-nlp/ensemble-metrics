@@ -41,8 +41,8 @@ print(metrics.combloss)
 See [a working example](./test/test_toy_example.py) for details.
 
 ## Other materials (Japanese only)
-* [アンサンブル学習はどうすれば性能アップできるのか、日立製作所が実務に役立つ新理論を提唱 | 日経Robotics（日経ロボティクス）](https://xtech.nikkei.com/atcl/nxt/mag/rob/18/012600001/00114/)
-* [人工知能学会２０２３ランチョンセミナー「アンサンブル学習における基礎理論の構築」| Speaker Deck](https://speakerdeck.com/morishtr/ren-gong-zhi-neng-xue-hui-2023rantiyonsemina-ansanburuxue-xi-niokeruji-chu-li-lun-nogou-zhu)
+* [日経ロボティクス2023/2月号: アンサンブル学習はどうすれば性能アップできるのか、日立製作所が実務に役立つ新理論を提唱](https://xtech.nikkei.com/atcl/nxt/mag/rob/18/012600001/00114/)
+* [人工知能学会2023: ランチョンセミナー「アンサンブル学習における基礎理論の構築」](https://speakerdeck.com/morishtr/ren-gong-zhi-neng-xue-hui-2023rantiyonsemina-ansanburuxue-xi-niokeruji-chu-li-lun-nogou-zhu)
 
 ## Contact
 For any reason where a GitHub pull request or an issue is not appropriate, feel free to email terufumi.morishita.wp[at]hitachi.com.
